@@ -2,7 +2,6 @@ import 'package:crypto_tracker_flutter/elements/currency_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../elements/money_data.dart';
 import 'dart:io' show Platform;
 
 import '../models/currency_model.dart';
@@ -120,17 +119,15 @@ Widget build(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Material(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: FutureBuilder<CurrencyData>(
+       
+       FutureBuilder<CurrencyData>(
             future: currencyData,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 // If data has been successfully fetched
                 return CurrencyWidget(
                   name: snapshot.data?.name ?? '',
+                  symbol:snapshot.data?.symbol ?? '',
                   price: snapshot.data?.price ?? 0.0,
                 );
               } else if (snapshot.hasError) {
@@ -145,7 +142,7 @@ Widget build(BuildContext context) {
               );
             },
           ),
-        ),
+        
         Container(
           height: 150.0,
           alignment: Alignment.center,

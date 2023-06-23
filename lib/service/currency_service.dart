@@ -40,9 +40,11 @@ class CurrencyService {
     
 final data = response.data['data']['1'];
 final name = data ['name'];
+final symbol = data  ['symbol'];
 final price = data['quotes']['USD']['price'];
 
  print('Name: ${name}');
+ print('Symbol: ${symbol}');
  print('USD Price: ${price}');
 
   
@@ -51,6 +53,7 @@ return CurrencyData(
   // null-aware coalescing opérateur de coalescence nulle
   //fournie valeur de substitution si la valeur à gauche de l'opérateur est nulle 
       name: name ?? '',
+      symbol: symbol ?? '',
       price: price,
     );
     
