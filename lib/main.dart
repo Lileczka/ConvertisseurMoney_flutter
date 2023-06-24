@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
     return  MaterialApp(
       theme: ThemeData.dark().copyWith(
       
-        scaffoldBackgroundColor: Color.fromARGB(255, 189, 192, 193)),
+        scaffoldBackgroundColor:const  Color.fromARGB(255, 189, 192, 193)),
       home: const PriceScreen(),
     );
   }

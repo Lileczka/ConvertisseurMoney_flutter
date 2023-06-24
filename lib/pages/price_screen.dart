@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:io' show Platform;
 
+import '../elements/crypto_widget_liste.dart.dart';
 import '../models/currency_model.dart';
 import '../service/currency_service.dart';
 
@@ -18,6 +19,7 @@ class _PriceScreenState extends State<PriceScreen> {
   String? currency = 'USD';
 
   late Future<CurrencyData> currencyData;
+  late Future<List<Map<String, String>>> cryptoNames;
 
   List<DropdownMenuItem<String>> getCurrenciesList() {
     List<DropdownMenuItem<String>> dropItems = [];
@@ -76,7 +78,7 @@ class _PriceScreenState extends State<PriceScreen> {
       },
     );
   }
-
+//IOS
   CupertinoPicker iosPicker() {
     List<Text> pickerItems = [];
     for (String currency in currenciesList) {
@@ -107,6 +109,7 @@ class _PriceScreenState extends State<PriceScreen> {
   void initState() {
     super.initState();
     currencyData = CurrencyService().fetchCurrency();
+    cryptoNames = CurrencyService().fetchCryptoNames();
   }
 
   @override
@@ -119,37 +122,44 @@ Widget build(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-       
-       FutureBuilder<CurrencyData>(
-            future: currencyData,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                // If data has been successfully fetched
-                return CurrencyWidget(
-                  name: snapshot.data?.name ?? '',
-                  symbol:snapshot.data?.symbol ?? '',
-                  price: snapshot.data?.price ?? 0.0,
-                );
-              } else if (snapshot.hasError) {
-                // If an error occurred during data retrieval
-                return const Text("Désolé, erreur"); // Display an error message
-              }
-              return const Center(
-                child: SpinKitRotatingCircle(
-                  color: Colors.white,
-                  size: 180.0,
-                ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: CryptoWidgetList(),
+            ),
+            Expanded(
+              child: Container(
+                height: 150.0,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(bottom: 30.0),
+                color: const Color.fromARGB(255, 62, 62, 62),
+                // Pour l'apparence iOS, on peut choisir iosPicker()
+                child: Platform.isIOS ? iosPicker() : getAndroidDropdownButton(),
+              ),
+            ),
+          ],
+        ),
+        FutureBuilder<CurrencyData>(
+          future: currencyData,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              // Si les données ont été récupérées avec succès
+              return CurrencyWidget(
+                name: snapshot.data?.name ?? '',
+                symbol: snapshot.data?.symbol ?? '',
+                price: snapshot.data?.price ?? 0.0,
               );
-            },
-          ),
-        
-        Container(
-          height: 150.0,
-          alignment: Alignment.center,
-          padding: const EdgeInsets.only(bottom: 30.0),
-          color: const Color.fromARGB(255, 62, 62, 62),
-          //pour apparence IOS on peux choisir iosPicker()
-          child: Platform.isIOS ? iosPicker() : getAndroidDropdownButton(),
+            } else if (snapshot.hasError) {
+              // Si une erreur s'est produite lors de la récupération des données
+              return const Text("Désolé, erreur"); // Affiche un message d'erreur
+            }
+            return const Center(
+              child: SpinKitRotatingCircle(
+                color: Colors.white,
+                size: 180.0,
+              ),
+            );
+          },
         ),
       ],
     ),

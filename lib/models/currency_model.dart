@@ -1,4 +1,5 @@
 class CurrencyData {
+
   final String name;
   final String symbol;
   final double price;

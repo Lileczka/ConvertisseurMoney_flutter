@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 class CurrencyWidget extends StatelessWidget {
   const CurrencyWidget({
+  
     required this.name,
     required this.symbol,
     required this.price,
     Key? key,
   }) : super(key: key);
-
+  
   final String name;
   final String symbol;
   final double price;
@@ -39,7 +40,7 @@ Widget build(BuildContext context) {
                     color: Color.fromARGB(255, 3, 99, 150),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   symbol, 
                   style: const TextStyle(
