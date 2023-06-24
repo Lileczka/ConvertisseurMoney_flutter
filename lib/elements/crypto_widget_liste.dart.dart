@@ -39,10 +39,11 @@ class _CryptoWidgetListState extends State<CryptoWidgetList> {
   
     cryptoItems.add(newItem);
   }
-
+ print(cryptoItems);
   return cryptoItems;
 }
-List<Text> getPicker(List<Map<String, String>> cryptoNames) {
+List<Text> getPicker(
+  List<Map<String, String>> cryptoNames) {
   List<Text> pickerItems = [];
   for (Map<String, String> crypto in cryptoNames) {
     String cryptoName = crypto['name'] ?? '';
@@ -85,39 +86,27 @@ List<Text> getPicker(List<Map<String, String>> cryptoNames) {
     },
   );
 }
-//IOS
-Widget iosPicker() {
-  return  CupertinoPicker(
-        backgroundColor: const Color.fromARGB(255, 62, 62, 62),
-        itemExtent: 32.0,
-        onSelectedItemChanged: (selectedIndex) {
-          print(selectedIndex);
-        },
-        children: [
-          FutureBuilder<List<Map<String, String>>>(
-            future: cryptoNames,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                return Column(
-                  children: [
-                    for (Map<String, String> crypto in snapshot.data!) 
-                      Text(
-                        crypto['name'] ?? '',
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                  ],
-                );
-              }  return const SizedBox();
-            },
-          ),
-        ],
-      );
-    
 
+// IOS
+  Widget iosPicker() {
+  return FutureBuilder<List<Map<String, String>>>(
+    future: cryptoNames,
+    builder: (context, snapshot) {
+      return snapshot.connectionState == ConnectionState.done && snapshot.hasData
+          ? CupertinoPicker(
+              //backgroundColor: Colors.black,
+              itemExtent: 32.0,
+              //diameterRatio: 40,
+              onSelectedItemChanged: (selectedIndex) {
+                print(selectedIndex);
+              },
+              children: getPicker(snapshot.data!),
+            )
+          : CupertinoActivityIndicator();
+    },
+  );
 }
+
 
 
 
@@ -150,26 +139,26 @@ Widget iosPicker() {
 @override
 Widget build(BuildContext context) {
   return Container(
-    height: 250.0,
+    height: 200.0,
     alignment: Alignment.center,
-    padding: const EdgeInsets.all(50.0),
-    color: const Color.fromARGB(255, 62, 62, 62),
-    child: /*Platform.isIOS
-        ? iosPicker()
-        : */FutureBuilder<List<Map<String, String>>>(
-            future: cryptoNames,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                return getAndroidDropdownButton(snapshot.data!);
-              } else {
-                return const CircularProgressIndicator();
+   
+    color: Colors.black,
+    child: FutureBuilder<List<Map<String, String>>>(
+      future: cryptoNames,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+          return Platform.isIOS
+              ? iosPicker() 
+              : getAndroidDropdownButton(snapshot.data!); // Pass the data from snapshot
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return CircularProgressIndicator();
         }
-            },
-          ),
-        
-    );
-  }
-
+      },
+    ),
+  );
+}
 }
   
   
