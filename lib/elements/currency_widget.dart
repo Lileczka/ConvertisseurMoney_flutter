@@ -5,13 +5,14 @@ class CurrencyWidget extends StatelessWidget {
   
     required this.name,
     required this.symbol,
-    required this.price,
+    required this.priceEUR,
+  
     Key? key,
   }) : super(key: key);
   
   final String name;
   final String symbol;
-  final double price;
+  final double priceEUR;
 
   @override
 Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 10),
             Text(
-              'valeur de USD = ${price.toString()}',
+              'valeur de USD = ${priceEUR.toString()}',
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

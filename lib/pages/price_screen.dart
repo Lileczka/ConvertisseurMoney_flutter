@@ -17,12 +17,14 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  late Future<CurrencyData> currencyData;
+  
+ late Future<List<CurrencyData>> currencyData;
 
   @override
   void initState() {
     super.initState();
     currencyData = CurrencyService().fetchCurrency();
+    
   }
 
   @override
@@ -48,37 +50,37 @@ class _PriceScreenState extends State<PriceScreen> {
               ),
             ],
           ),
-          FutureBuilder<CurrencyData>(
-            future: currencyData,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                // Si les données ont été récupérées avec succès
-                return CurrencyWidget(
-                  name: snapshot.data?.name ?? '',
-                  symbol: snapshot.data?.symbol ?? '',
-                  price: snapshot.data?.price ?? 0.0,
-                );
-              } else if (snapshot.hasError) {
-                // Si une erreur s'est produite lors de la récupération des données
-                return const Text(
-                    "Désolé, erreur"); // Affiche un message d'erreur
-              }
-              return const Center(
-                child: SpinKitRotatingCircle(
-                  color: Colors.white,
-                  size: 180.0,
-                ),
+          FutureBuilder<List<CurrencyData>>(
+          future: currencyData,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+             
+              return CurrencyWidget(
+                name: snapshot.data![0].name,
+                symbol: snapshot.data![0].symbol,
+                priceEUR: snapshot.data![0].priceEUR,
               );
-            },
+            } else if (snapshot.hasError) {
+             
+              return const Text(
+                  "Désolé, erreur"); 
+            }
+            return const Center(
+              child: SpinKitRotatingCircle(
+                color: Colors.white,
+                size: 180.0,
+              ),
+            );
+          },
+        ),
+        SizedBox(
+          height: 40.0,
+          child: Container(
+            color: Colors.black,
           ),
-          SizedBox(
-            height: 40.0,
-            child: Container(
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }

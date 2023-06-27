@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../models/currency_model.dart';
 import '../service/currency_service.dart';
 
@@ -15,8 +13,9 @@ class CurrencyWidgetListe extends StatefulWidget {
 
 class _CurrencyWidgetListeState extends State<CurrencyWidgetListe> {
   String? currency = 'USD';
+late Future<List<CurrencyData>> currencyData;
 
-  late Future<CurrencyData> currencyData;
+ 
   late Future<List<Map<String, String>>> cryptoNames;
 
   List<DropdownMenuItem<String>> getCurrenciesList() {
@@ -77,24 +76,28 @@ class _CurrencyWidgetListeState extends State<CurrencyWidgetListe> {
     );
   }
 
+  
   // IOS
-  CupertinoPicker iosPicker() {
-    List<Text> pickerItems = [];
-    for (String currency in currenciesList) {
-      pickerItems.add(Text(currency));
-    }
-    return CupertinoPicker(
-      backgroundColor: Colors.black,
-      // hauteur de chaque élément à l'intérieur
-      itemExtent: 32.0,
-      //diameterRatio: 40, 
-      // ce qui se passe quand on modifie la sélection en scrollant
-      onSelectedItemChanged: (selectedIndex) {
-        print(selectedIndex);
-      },
-      children: pickerItems,
-    );
+CupertinoPicker iosPicker() {
+  List<Text> pickerItems = [];
+  for (String currency in currenciesList) {
+    pickerItems.add(Text(currency));
   }
+  return CupertinoPicker(
+    backgroundColor: Colors.black,
+    itemExtent: 32.0,
+    onSelectedItemChanged: (selectedIndex) {
+      setState(() {
+        String selectedCurrency = currenciesList[selectedIndex];
+        print('Selected Currency: Index $selectedIndex, $selectedCurrency');
+        CurrencyService().fetchCurrency(toto: selectedCurrency );
+        
+      });
+    },
+    children: pickerItems,
+  );
+}
+
 
   // Pour choisir le style selon la plateforme
   Widget choisePicker() {
@@ -110,7 +113,7 @@ class _CurrencyWidgetListeState extends State<CurrencyWidgetListe> {
   void initState() {
     super.initState();
     currencyData = CurrencyService().fetchCurrency();
-    cryptoNames = CurrencyService().fetchCryptoNames();
+    //cryptoNames = CurrencyService().fetchCryptoNames();
   }
 
   @override
