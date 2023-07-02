@@ -3,6 +3,7 @@ import 'package:crypto_tracker_flutter/models/currency_model.dart';
 
 
 
+
 /*
 //-----recuperer json depuis Api
 class CurrencyService {
@@ -70,33 +71,21 @@ const List<String> currenciesList = [
       'JPY',
       'CAD',
       'KRW',
-      'PLN',
-      
+      'PLN'
     ];
-
 
 
 
 class CurrencyService {
-  Future<List<CurrencyData>> fetchCurrency({List<String>? currenciesList, String? toto="USD"}) async {
-    const List<String> currenciesList = [
-      'USD',
-      'EUR',
-      'GBP',
-      'RUB',
-      'JPY',
-      'CAD',
-      'KRW',
-      'PLN',
-    
-        
-    ];
+  Future<List<CurrencyData>> fetchCurrency({List<String>? currenciesList, String toto = "USD"}) async {
+   
 
     final Dio dio = Dio();
-    final String baseUrl ='https://api.alternative.me/v1/ticker/?limit=10&convert=';
+    const String baseUrl = 'https://api.alternative.me/v1/ticker/?limit=15&convert=';
     print(baseUrl);
-    
+    if(currenciesList != null) {
     currenciesList.join(',');
+    };
     final String url = '$baseUrl$toto';
 
     final Response response = await dio.get(url);
@@ -108,21 +97,23 @@ class CurrencyService {
     print(responseData);
 
     for (final currencyData in responseData) {
-      final String name = currencyData['name'];
-      final String symbol = currencyData['symbol'];
-     final double priceEUR = double.parse(currencyData['price_${toto?.toLowerCase()}'] ?? '0');
-     //final double priceUSD = double.parse(currencyData['price_usd']);
+  final String crypto = currencyData['name'];
+  
+  final String symbol = currencyData['symbol'];
+  final double price = double.parse(currencyData['price_${toto.toLowerCase()}'] ?? '0');
 
-      final CurrencyData currency = CurrencyData(
-        name: name,
-        symbol: symbol,
-        priceEUR: priceEUR,
-        //priceUSD: priceUSD,
-      );
-      cryptoNames.add(currency);
+  final CurrencyData currency = CurrencyData(
+    crypto: crypto,
+   
+    symbol: symbol,
+    price: price,
+  );
+  cryptoNames.add(currency);
+  print('Name: $crypto, Symbol: $symbol, Price in $toto: $price');
+}
 
-      print('Name: $name, Symbol: $symbol, Price in $toto: $priceEUR');
-    }
+      
+    
 
     return cryptoNames;
   }

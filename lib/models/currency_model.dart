@@ -1,11 +1,11 @@
 class CurrencyData {
 
-  final String name;
+  final String crypto;
   final String symbol;
-  final double priceEUR;
+  final double price;
+ 
   
 
-  CurrencyData({required this.name, required this.symbol, required this.priceEUR, 
-  
-  });
+  CurrencyData({required this.crypto, required this.symbol, required this.price, 
+});
 }
